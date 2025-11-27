@@ -9,17 +9,21 @@ class AgentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
-      color: Colors.grey[900],
+      // color: Colors.grey[900], // Removido para usar o tema
       margin: const EdgeInsets.all(12),
       child: ListTile(
         onTap: onTap,
-        title: Text(agent.name, style: TextStyle(color: Colors.white)),
+        title: Text(agent.name), // Usa estilo padrão do tema
         subtitle: Text(
           agent.description,
-          style: TextStyle(color: Colors.white70),
+          style: TextStyle(color: theme.hintColor),
         ),
-        trailing: Icon(Icons.arrow_forward_ios, color: Colors.orange),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          color: theme.colorScheme.primary,
+        ),
       ),
     );
   }

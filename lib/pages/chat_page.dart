@@ -86,13 +86,48 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
+  Future<void> _clearHistory() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Limpar Histórico"),
+        content: Text(
+          "Tem certeza que deseja apagar todas as mensagens deste chat?",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text("Limpar", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await box.clear();
+      setState(() {
+        messages.clear();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.black87,
       appBar: AppBar(
-        backgroundColor: Colors.orange,
         title: Text(widget.agent.name),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: _clearHistory,
+            tooltip: "Limpar Histórico",
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -112,7 +147,7 @@ class _ChatPageState extends State<ChatPage> {
                         SizedBox(width: 10),
                         Text(
                           "${widget.agent.name} está digitando...",
-                          style: TextStyle(color: Colors.white70),
+                          style: TextStyle(color: theme.hintColor),
                         ),
                       ],
                     ),
@@ -136,29 +171,20 @@ class _ChatPageState extends State<ChatPage> {
           ),
           Container(
             padding: EdgeInsets.all(12),
-            color: Colors.grey[900],
+            color: theme
+                .scaffoldBackgroundColor, // Mesma cor do fundo para parecer contínuo ou surface
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: controller,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: "Digite aqui...",
-                      hintStyle: TextStyle(color: Colors.white54),
-                      filled: true,
-                      fillColor: Colors.grey[800],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
+                    decoration: InputDecoration(hintText: "Digite aqui..."),
                     onSubmitted: (_) => sendMessage(),
                   ),
                 ),
                 SizedBox(width: 10),
                 IconButton(
-                  icon: Icon(Icons.send, color: Colors.orange),
+                  icon: Icon(Icons.send, color: theme.colorScheme.primary),
                   onPressed: sendMessage,
                 ),
               ],

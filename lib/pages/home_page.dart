@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/agent.dart';
 import 'chat_page.dart';
 import '../widgets/agent_card.dart';
+import '../main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,11 +35,39 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.black87,
       appBar: AppBar(
-        backgroundColor: Colors.orange,
         title: Text("TaskForge-AI"),
+        actions: [
+          ValueListenableBuilder<ThemeMode>(
+            valueListenable: themeNotifier,
+            builder: (context, mode, child) {
+              IconData icon;
+              if (mode == ThemeMode.light) {
+                icon = Icons.wb_sunny;
+              } else if (mode == ThemeMode.dark) {
+                icon = Icons.nightlight_round;
+              } else {
+                icon = Icons.brightness_auto;
+              }
+
+              return IconButton(
+                icon: Icon(icon),
+                onPressed: () {
+                  if (mode == ThemeMode.light) {
+                    themeNotifier.value = ThemeMode.dark;
+                  } else if (mode == ThemeMode.dark) {
+                    themeNotifier.value = ThemeMode.system;
+                  } else {
+                    themeNotifier.value = ThemeMode.light;
+                  }
+                },
+                tooltip: "Alternar Tema",
+              );
+            },
+          ),
+        ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -52,9 +81,10 @@ class _HomePageState extends State<HomePage> {
                     itemCount: agents.length,
                     itemBuilder: (context, index) {
                       final agent = agents[index];
+                      final isSelected = selectedAgent?.id == agent.id;
                       return Container(
-                        color: selectedAgent?.id == agent.id
-                            ? Colors.white10
+                        color: isSelected
+                            ? theme.colorScheme.primaryContainer
                             : null,
                         child: AgentCard(
                           agent: agent,
@@ -70,12 +100,14 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Expanded(
                   child: Container(
-                    color: Colors.black54,
+                    color: theme.scaffoldBackgroundColor,
                     child: selectedAgent == null
                         ? Center(
                             child: Text(
                               "Selecione um agente para conversar",
-                              style: TextStyle(color: Colors.white54),
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: theme.hintColor,
+                              ),
                             ),
                           )
                         : ChatPage(

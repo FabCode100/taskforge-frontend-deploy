@@ -27390,7 +27390,7 @@ var $async$a1E=A.R(function(a1,a2){if(a1===1){o.push(a2)
 s=p}for(;;)switch(s){case 0:c=$.a1e()
 c.Wm("agent_id: "+a+" , prompt: "+a0)
 p=4
-g=A.hY("https://taskforge-backend-deploy.vercel.app//agents/"+a+"/execute",0,null)
+g=A.hY("https://taskforge-backend-deploy.onrender.com//agents/"+a+"/execute",0,null)
 f=t.N
 e=A.aD(["Content-Type","application/json"],f,f)
 s=7

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Api {
-  static const baseUrl = "https://taskforge-backend-deploy.onrender.com";
+  static const baseUrl = "https://taskforge-backend-deploy.vercel.app/";
 
   static Future<String> sendMessage({
     required String agentId,
